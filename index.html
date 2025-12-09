@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Production-Ready n8n on AWS | Complete Setup Guide</title>
+    <meta name="description" content="The ultimate guide to deploying n8n workflow automation on AWS EC2 with Docker, PostgreSQL, Nginx, and SSL. Production-grade setup in 15 steps.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">
+                <span class="logo-icon">⚡</span>
+                <span>n8n AWS Guide</span>
+            </a>
+            <div class="nav-links" id="navLinks">
+                <a href="#requirements">Requirements</a>
+                <a href="#setup">Setup</a>
+                <a href="#security">Security</a>
+                <a href="#backup">Backup</a>
+            </div>
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <span class="sun-icon">☀️</span>
+                    <span class="moon-icon">🌙</span>
+                </button>
+                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-bg"></div>
+        <div class="container hero-content">
+            <div class="hero-badge">
+                <span class="badge-icon">📘</span>
+                <span>Official Installation Guide</span>
+            </div>
+            <h1 class="hero-title">
+                Production-Ready <span class="gradient-text">n8n</span> on AWS
+            </h1>
+            <p class="hero-subtitle">
+                Deploy enterprise-grade workflow automation with EC2, Docker, PostgreSQL, Nginx & SSL
+            </p>
+            <div class="hero-stack">
+                <div class="stack-item">
+                    <span class="stack-icon">🐳</span>
+                    <span>Docker</span>
+                </div>
+                <div class="stack-item">
+                    <span class="stack-icon">🐘</span>
+                    <span>PostgreSQL</span>
+                </div>
+                <div class="stack-item">
+                    <span class="stack-icon">🔒</span>
+                    <span>SSL/HTTPS</span>
+                </div>
+                <div class="stack-item">
+                    <span class="stack-icon">☁️</span>
+                    <span>AWS EC2</span>
+                </div>
+            </div>
+            <div class="hero-cta">
+                <a href="#step-1" class="btn btn-primary">
+                    <span>Start Setup</span>
+                    <span class="btn-arrow">→</span>
+                </a>
+                <a href="#capabilities" class="btn btn-secondary">View Capabilities</a>
+            </div>
+        </div>
+        <div class="hero-scroll">
+            <span>Scroll to explore</span>
+            <div class="scroll-indicator"></div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="content-grid">
+                <!-- Sidebar Navigation -->
+                <aside class="sidebar" id="sidebar">
+                    <div class="sidebar-sticky">
+                        <h3 class="sidebar-title">Quick Navigation</h3>
+                        <nav class="sidebar-nav">
+                            <a href="#step-1" class="sidebar-link" data-step="1">
+                                <span class="step-number">01</span>
+                                <span>System Requirements</span>
+                            </a>
+                            <a href="#step-2" class="sidebar-link" data-step="2">
+                                <span class="step-number">02</span>
+                                <span>Create EC2 Instance</span>
+                            </a>
+                            <a href="#step-3" class="sidebar-link" data-step="3">
+                                <span class="step-number">03</span>
+                                <span>Connect to Server</span>
+                            </a>
+                            <a href="#step-4" class="sidebar-link" data-step="4">
+                                <span class="step-number">04</span>
+                                <span>Install Docker</span>
+                            </a>
+                            <a href="#step-5" class="sidebar-link" data-step="5">
+                                <span class="step-number">05</span>
+                                <span>Setup Directory</span>
+                            </a>
+                            <a href="#step-6" class="sidebar-link" data-step="6">
+                                <span class="step-number">06</span>
+                                <span>Docker Compose</span>
+                            </a>
+                            <a href="#step-7" class="sidebar-link" data-step="7">
+                                <span class="step-number">07</span>
+                                <span>Start Services</span>
+                            </a>
+                            <a href="#step-8" class="sidebar-link" data-step="8">
+                                <span class="step-number">08</span>
+                                <span>Configure Domain</span>
+                            </a>
+                            <a href="#step-9" class="sidebar-link" data-step="9">
+                                <span class="step-number">09</span>
+                                <span>Install Nginx</span>
+                            </a>
+                            <a href="#step-10" class="sidebar-link" data-step="10">
+                                <span class="step-number">10</span>
+                                <span>Nginx Config</span>
+                            </a>
+                            <a href="#step-11" class="sidebar-link" data-step="11">
+                                <span class="step-number">11</span>
+                                <span>Enable HTTPS</span>
+                            </a>
+                            <a href="#step-12" class="sidebar-link" data-step="12">
+                                <span class="step-number">12</span>
+                                <span>Auto-Start</span>
+                            </a>
+                            <a href="#step-13" class="sidebar-link" data-step="13">
+                                <span class="step-number">13</span>
+                                <span>Updating n8n</span>
+                            </a>
+                            <a href="#step-14" class="sidebar-link" data-step="14">
+                                <span class="step-number">14</span>
+                                <span>Backup Strategy</span>
+                            </a>
+                            <a href="#step-15" class="sidebar-link" data-step="15">
+                                <span class="step-number">15</span>
+                                <span>Capabilities</span>
+                            </a>
+                        </nav>
+                    </div>
+                </aside>
+
+                <!-- Guide Content -->
+                <div class="guide-content">
+                    <!-- Step 1 -->
+                    <section class="step-section" id="step-1">
+                        <div class="step-header">
+                            <div class="step-badge">Step 1</div>
+                            <h2>System Requirements</h2>
+                            <p>Production-grade specifications for optimal performance</p>
+                        </div>
+                        <div class="requirements-grid">
+                            <div class="req-card">
+                                <div class="req-icon">💻</div>
+                                <h4>Instance</h4>
+                                <p>t3.small (2GB RAM) or t3.medium</p>
+                            </div>
+                            <div class="req-card">
+                                <div class="req-icon">🐧</div>
+                                <h4>OS</h4>
+                                <p>Ubuntu 22.04 LTS</p>
+                            </div>
+                            <div class="req-card">
+                                <div class="req-icon">🐘</div>
+                                <h4>Database</h4>
+                                <p>PostgreSQL 15+</p>
+                            </div>
+                            <div class="req-card">
+                                <div class="req-icon">💾</div>
+                                <h4>Storage</h4>
+                                <p>20–40 GB SSD</p>
+                            </div>
+                            <div class="req-card">
+                                <div class="req-icon">🌐</div>
+                                <h4>Network</h4>
+                                <p>Ports 22, 80, 443</p>
+                            </div>
+                            <div class="req-card">
+                                <div class="req-icon">🔗</div>
+                                <h4>Domain</h4>
+                                <p>Required for HTTPS</p>
+                            </div>
+                            <div class="req-card">
+                                <div class="req-icon">🛡️</div>
+                                <h4>Security</h4>
+                                <p>Nginx reverse proxy + SSL</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Step 2 -->
+                    <section class="step-section" id="step-2">
+                        <div class="step-header">
+                            <div class="step-badge">Step 2</div>
+                            <h2>Create EC2 Instance</h2>
+                            <p>Launch your AWS EC2 instance with proper configuration</p>
+                        </div>
+                        <div class="instruction-card">
+                            <div class="instruction-steps">
+                                <div class="instruction-step">
+                                    <span class="instruction-number">1</span>
+                                    <div class="instruction-content">
+                                        <strong>Open AWS Console</strong>
+                                        <p>Navigate to AWS → EC2 → Launch Instance</p>
+                                    </div>
+                                </div>
+                                <div class="instruction-step">
+                                    <span class="instruction-number">2</span>
+                                    <div class="instruction-content">
+                                        <strong>Choose Configuration</strong>
+                                        <ul>
+                                            <li><strong>AMI:</strong> Ubuntu Server 22.04 LTS</li>
+                                            <li><strong>Instance Type:</strong> t3.small or t3.medium</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="instruction-step">
+                                    <span class="instruction-number">3</span>
+                                    <div class="instruction-content">
+                                        <strong>Configure Storage</strong>
+                                        <p>20–40GB gp3 SSD</p>
+                                    </div>
+                                </div>
+                                <div class="instruction-step">
+                                    <span class="instruction-number">4</span>
+                                    <div class="instruction-content">
+                                        <strong>Security Group Rules</strong>
+                                        <div class="security-rules">
+                                            <div class="rule">
+                                                <span class="rule-type ssh">SSH</span>
+                                                <span class="rule-port">Port 22</span>
+                                                <span class="rule-source">My IP</span>
+                                            </div>
+                                            <div class="rule">
+                                                <span class="rule-type http">HTTP</span>
+                                                <span class="rule-port">Port 80</span>
+                                                <span class="rule-source">Anywhere</span>
+                                            </div>
+                                            <div class="rule">
+                                                <span class="rule-type https">HTTPS</span>
+                                                <span class="rule-port">Port 443</span>
+                                                <span class="rule-source">Anywhere</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="instruction-step">
+                                    <span class="instruction-number">5</span>
+                                    <div class="instruction-content">
+                                        <strong>Launch Instance</strong>
+                                        <p>Click launch and download your key pair (.pem file)</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Step 3 -->
+                    <section class="step-section" id="step-3">
+                        <div class="step-header">
+                            <div class="step-badge">Step 3</div>
+                            <h2>Connect to Server</h2>
+                            <p>SSH into your EC2 instance and update the system</p>
+                        </div>
+                        <div class="code-block-wrapper">
+                            <div class="code-header">
+                                <span class="code-lang">bash</span>
+                                <span class="code-title">Connect via SSH</span>
+                                <button class="copy-btn" data-copy="ssh -i your-key.pem ubuntu@YOUR_PUBLIC_IP">
+                                    <span class="copy-icon">📋</span>
+                                    <span class="copy-text">Copy</span>
+                                </button>
+                            </div>
+                            <pre class="code-block"><code>ssh -i your-key.pem ubuntu@YOUR_PUBLIC_IP</code></pre>
+                        </div>
+                        <div class="code-block-wrapper">
+                            <div class="code-header">
+                                <span class="code-lang">bash</span>
+                                <span class="code-title">Update System Packages</span>
+                                <button class="copy-btn" data-copy="sudo apt update && sudo apt upgrade -y">
+                                    <span class="copy-icon">📋</span>
+                                    <span class="copy-text">Copy</span>
+                                </button>
+                            </div>
+                            <pre class="code-block"><code>sudo apt update && sudo apt upgrade -y</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- Step 4 -->
+                    <section class="step-section" id="step-4">
+                        <div class="step-header">
+                            <div class="step-badge">Step 4</div>
+                            <h2>Install Docker + Compose</h2>
+                            <p>Set up Docker and Docker Compose for container management</p>
+                        </div>
+                        <div class="code-block-wrapper">
+                            <div class="code-header">
+                                <span class="code-lang">bash</span>
+                                <span class="code-title">Install & Configure Docker</span>
+                                <button class="copy-btn" data-copy="sudo apt install -y docker.io docker-compose-plugin
+sudo systemctl enable docker
+sudo systemctl start docker
+sudo usermod -aG docker $USER">
+                                    <span class="copy-icon">📋</span>
+                                    <span class="copy-text">Copy</span>
+                                </button>
+                            </div>
+                            <pre class="code-block"><code>sudo apt install -y docker.io docker-compose-plugin
+sudo systemctl enable docker
+sudo systemctl start docker
+sudo usermod -aG docker $USER</code></pre>
+                        </div>
+                        <div class="alert alert-warning">
+                            <span class="alert-icon">⚠️</span>
+                            <div class="alert-content">
+                                <strong>Important:</strong> Log out and log back in after running these commands to apply group changes.
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Step 5 -->
+                    <section class="step-section" id="step-5">
+                        <div class="step-header">
+                            <div class="step-badge">Step 5</div>
+                            <h2>Create n8n Setup Directory</h2>
+                            <p>Prepare the directory structure for n8n and PostgreSQL data</p>
+                        </div>
+                        <div class="code-block-wrapper">
+                            <div class="code-header">
+                                <span class="code-lang">bash</span>
+                                <span class="code-title">Create Directory Structure</span>
+                                <button class="copy-btn" data-copy="mkdir -p ~/n8n
+cd ~/n8n
+mkdir -p n8n_data postgres_data
+sudo chown -R 1000:1000 n8n_data postgres_data">
+                                    <span class="copy-icon">📋</span>
+                                    <span class="copy-text">Copy</span>
+                                </button>
+                            </div>
+                            <pre class="code-block"><code>mkdir -p ~/n8n
+cd ~/n8n
+mkdir -p n8n_data postgres_data
+sudo chown -R 1000:1000 n8n_data postgres_data</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- Step 6 -->
+                    <section class="step-section" id="step-6">
+                        <div class="step-header">
+                            <div class="step-badge">Step 6</div>
+                            <h2>Create Production docker-compose.yml</h2>
+                            <p>Configure PostgreSQL and n8n with secure settings</p>
+                        </div>
+                        <div class="code-block-wrapper">
+                            <div class="code-header">
+                                <span class="code-lang">bash</span>
+                                <span class="code-title">Create compose file</span>
+                                <button class="copy-btn" data-copy="nano docker-compose.yml">
+                                    <span class="copy-icon">📋</span>
+                                    <span class="copy-text">Copy</span>
+                                </button>
+                            </div>
+                            <pre class="code-block"><code>nano docker-compose.yml</code></pre>
+                        </div>
+                        <div class="code-block-wrapper large">
+                            <div class="code-header">
+                                <span class="code-lang">yaml</span>
+                                <span class="code-title">docker-compose.yml</span>
+                                <button class="copy-btn" data-copy='version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: n8n
+      POSTGRES_PASSWORD: strong_db_password_here
+      POSTGRES_DB: n8n
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    environment:
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: n8n
+      DB_POSTGRESDB_USER: n8n
+      DB_POSTGRESDB_PASSWORD: strong_db_password_here
+
+      N8N_BASIC_AUTH_ACTIVE: "true"
+      N8N_BASIC_AUTH_USER: admin
+      N8N_BASIC_AUTH_PASSWORD: strong_panel_password_here
+
+      N8N_HOST: n8n.yourdomain.com
+      N8N_PORT: 5678
+      N8N_PROTOCOL: https
+      WEBHOOK_URL: https://n8n.yourdomain.com/
+
+      NODE_ENV: production
+      N8N_ENCRYPTION_KEY: long_random_secure_key
+
+    ports:
+      - "127.0.0.1:5678:5678"
+    volumes:
+      - ./n8n_data:/home/node/.n8n
+
+volumes:
+  postgres_data:'>
+                                    <span class="copy-icon">📋</span>
+                                    <span class="copy-text">Copy</span>
+                                </button>
+                            </div>
+                            <pre class="code-block"><code><span class="code-key">version:</span> <span class="code-string">"3.8"</span>
+
+<span class="code-key">services:</span>
+  <span class="code-key">postgres:</span>
+    <span class="code-key">image:</span> postgres:15
+    <span class="code-key">restart:</span> unless-stopped
+    <span class="code-key">environment:</span>
+      <span class="code-key">POSTGRES_USER:</span> n8n
+      <span class="code-key">POSTGRES_PASSWORD:</span> <span class="code-placeholder">strong_db_password_here</span>
+      <span class="code-key">POSTGRES_DB:</span> n8n
+    <span class="code-key">volumes:</span>
+      - ./postgres_data:/var/lib/postgresql/data
+
+  <span class="code-key">n8n:</span>
+    <span class="code-key">image:</span> docker.n8n.io/n8nio/n8n
+    <span class="code-key">restart:</span> unless-stopped
+    <span class="code-key">depends_on:</span>
+      - postgres
+    <span class="code-key">environment:</span>
+      <span class="code-key">DB_TYPE:</span> postgresdb
+      <span class="code-key">DB_POSTGRESDB_HOST:</span> postgres
+      <span class="code-key">DB_POSTGRESDB_PORT:</span> 5432
+      <span class="code-key">DB_POSTGRESDB_DATABASE:</span> n8n
+      <span class="code-key">DB_POSTGRESDB_USER:</span> n8n
+      <span class="code-key">DB_POSTGRESDB_PASSWORD:</span> <span class="code-placeholder">strong_db_password_here</span>
+
+      <span class="code-key">N8N_BASIC_AUTH_ACTIVE:</span> <span class="code-string">"true"</span>
+      <span class="code-key">N8N_BASIC_AUTH_USER:</span> admin
+      <span class="code-key">N8N_BASIC_AUTH_PASSWORD:</span> <span class="code-placeholder">strong_panel_password_here</span>
+
+      <span class="code-key">N8N_HOST:</span> <span class="code-placeholder">n8n.yourdomain.com</span>
+      <span class="code-key">N8N_PORT:</span> 5678
+      <span class="code-key">N8N_PROTOCOL:</span> https
+      <span class="code-key">WEBHOOK_URL:</span> <span class="code-placeholder">https://n8n.yourdomain.com/</span>
+
+      <span class="code-key">NODE_ENV:</span> production
+      <span class="code-key">N8N_ENCRYPTION_KEY:</span> <span class="code-placeholder">long_random_secure_key</span>
+
+    <span class="code-key">ports:</span>
+      - <span class="code-string">"127.0.0.1:5678:5678"</span>  <span class="code-comment"># local only</span>
+    <span class="code-key">volumes:</span>
+      - ./n8n_data:/home/node/.n8n
+
+<span class="code-key">volumes:</span>
+  <span class="code-key">postgres_data:</span></code></pre>
+                        </div>
+                        <div class="alert alert-info">
+                            <span class="alert-icon">🔑</span>
+                            <div class="alert-content">
+                                <strong>Replace these placeholders:</strong>
+                                <ul>
+                                    <li><code>strong_db_password_here</code> — Your PostgreSQL password</li>
+                                    <li><code>strong_panel_password_here</code> — Your n8n admin password</li>
+                                    <li><code>n8n.yourdomain.com</code> — Your actual domain</li>
+                                    <li><code>long_random_secure_key</code> — Generate with command below</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="code-block-wrapper">
+                            <div class="code-header">
+                                <span class="code-lang">bash</span>
+                                <span class="code-title">Generate Encryption Key</span>
+                                <button class="copy-btn" data-copy="openssl rand -hex 32">
+                                    <span class="copy-icon">📋</span>
+                                    <span class="copy-text">Copy</span>
+                                </button>
+                            </div>
+                            <pre class="code-block"><code>openssl rand -hex 32</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- Step 7 -->
+                    <section class="step-section" id="step-7">
+                        <div class="step-header">
+                            <div class="step-badge">Step 7</div>
+                            <h2>Start Services</h2>
+                            <p>Launch n8n and PostgreSQL containers</p>
+                        </div>
+                        <div class="code-block-wrapper">
+                            <div class="code-header">
+                                <span class="code-lang">bash</span>
+                                <span class="code-title">Start Docker Compose</span>
+                                <button class="copy-btn" data-copy="docker compose up -d">
+                                    <span class="copy-icon">📋</span>
+                                    <span class="copy-text">Copy</span>
+                                </button>
+                            </div>
+                            <pre class="code-block"><code>docker compose up -d</code></pre>
+                        </div>
+                        <div class="code-block-wrapper">
+                            <div class="code-header">
+                                <span class="code-lang">bash</span>
+                                <span class="code-title">Verify Running Containers</span>
+                                <button class="copy-btn" data-copy="docker compose ps">
+                                    <span class="copy-icon">📋</span>
+                                    <span class="copy-text">Copy</span>
+                                </button>
+                            </div>
+                            <pre class="code-block"><code>docker compose ps</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- Step 8 -->
+                    <section class="step-section" id="step-8">
+                        <div class="step-header">
+                            <div class="step-badge">Step 8</div>
+                            <h2>Configure Domain (DNS)</h2>
+                            <p>Point your domain to your EC2 instance</p>
+                        </div>
+                        <div class="instruction-card">
+                            <div class="instruction-steps">
+                                <div class="instruction-step">
+                                    <span class="instruction-number">1</span>
+                                    <div class="instruction-content">
+                                        <strong>Access DNS Management</strong>
+                                        <p>Go to your domain provider (GoDaddy, Namecheap, Hostinger, Cloudflare, etc.)</p>
+                                    </div>
+                                </div>
+                                <div class="instruction-step">
+                                    <span class="instruction-number">2</span>
+                                    <div class="instruction-content">
+                                        <strong>Add A Record</strong>
+                                        <div class="dns-record">
+                                            <div class="dns-field">
+                                                <span class="dns-label">Type</span>
+                                                <span class="dns-value">A</span>
+                                            </div>
+                                            <div class="dns-field">
+                                                <span class="dns-label">Name</span>
+                                                <span class="dns-value">n8n</span>
+                                            </div>
+                                            <div class="dns-field">
+                                                <span class="dns-label">Value</span>
+                                                <span class="dns-value">YOUR_EC2_PUBLIC_IP</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="alert alert-info">
+                            <span class="alert-icon">⏱️</span>
+                            <div class="alert-content">
+                                <strong>Propagation Time:</strong> DNS changes typically take 5–30 minutes to propagate globally.
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Step 9 -->
+                    <section class="step-section" id="step-9">
+                        <div class="step-header">
+                            <div class="step-badge">Step 9</div>
+                            <h2>Install Nginx (Reverse Proxy)</h2>
+                            <p>Set up Nginx to handle incoming traffic</p>
+                        </div>
+                        <div class="code-block-wrapper">
+                            <div class="code-header">
+                                <span class="code-lang">bash</span>
+                                <span class="code-title">Install & Start Nginx</span>
+                                <button class="copy-btn" data-copy="sudo apt install -y nginx
+sudo systemctl enable nginx
+sudo systemctl start nginx">
+                                    <span class="copy-icon">📋</span>
+                                    <span class="copy-text">Copy</span>
+                                </button>
+                            </div>
+                            <pre class="code-block"><code>sudo apt install -y nginx
+sudo systemctl enable nginx
+sudo systemctl start nginx</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- Step 10 -->
+                    <section class="step-section" id="step-10">
+                        <div class="step-header">
+                            <div class="step-badge">Step 10</div>
+                            <h2>Create Nginx Config for n8n</h2>
+                            <p>Configure Nginx as a reverse proxy for n8n</p>
+                        </div>
+                        <div class="code-block-wrapper">
+                            <div class="code-header">
+                                <span class="code-lang">bash</span>
+                                <span class="code-title">Create config file</span>
+                                <button class="copy-btn" data-copy="sudo nano /etc/nginx/sites-available/n8n">
+                                    <span class="copy-icon">📋</span>
+                                    <span class="copy-text">Copy</span>
+                                </button>
+                            </div>
+                            <pre class="code-block"><code>sudo nano /etc/nginx/sites-available/n8n</code></pre>
+                        </div>
+                        <div class="code-block-wrapper">
+                            <div class="code-header">
+                                <span class="code-lang">nginx</span>
+                                <span class="code-title">Nginx Configuration</span>
+                                <button class="copy-btn" data-copy="server {
+    listen 80;
+    server_name n8n.yourdomain.com;
+
+    location / {
+        proxy_pass http://127.0.0.1:5678/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_buffering off;
+    }
+}">
+                                    <span class="copy-icon">📋</span>
+                                    <span class="copy-text">Copy</span>
+                                </button>
+                            </div>
+                            <pre class="code-block"><code><span class="code-key">server</span> {
+    <span class="code-key">listen</span> 80;
+    <span class="code-key">server_name</span> <span class="code-placeholder">n8n.yourdomain.com</span>;
+
+    <span class="code-key">location</span> / {
+        <span class="code-key">proxy_pass</span> http://127.0.0.1:5678/;
+        <span class="code-key">proxy_set_header</span> Host $host;
+        <span class="code-key">proxy_set_header</span> X-Real-IP $remote_addr;
+        <span class="code-key">proxy_set_header</span> X-Forwarded-For $proxy_add_x_forwarded_for;
+        <span class="code-key">proxy_set_header</span> X-Forwarded-Proto $scheme;
+        <span class="code-key">proxy_buffering</span> off;
+    }
+}</code></pre>
+                        </div>
+                        <div class="code-block-wrapper">
+                            <div class="code-header">
+                                <span class="code-lang">bash</span>
+                                <span class="code-title">Enable & Test Config</span>
+                                <button class="copy-btn" data-copy="sudo ln -s /etc/nginx/sites-available/n8n /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx">
+                                    <span class="copy-icon">📋</span>
+                                    <span class="copy-text">Copy</span>
+                                </button>
+                            </div>
+                            <pre class="code-block"><code>sudo ln -s /etc/nginx/sites-available/n8n /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- Step 11 -->
+                    <section class="step-section" id="step-11">
+                        <div class="step-header">
+                            <div class="step-badge highlight">Step 11</div>
+                            <h2>Enable HTTPS (SSL) Using Certbot</h2>
+                            <p>Secure your n8n installation with free SSL certificate</p>
+                        </div>
+                        <div class="code-block-wrapper">
+                            <div class="code-header">
+                                <span class="code-lang">bash</span>
+                                <span class="code-title">Install Certbot</span>
+                                <button class="copy-btn" data-copy="sudo apt install -y certbot python3-certbot-nginx">
+                                    <span class="copy-icon">📋</span>
+                                    <span class="copy-text">Copy</span>
+                                </button>
+                            </div>
+                            <pre class="code-block"><code>sudo apt install -y certbot python3-certbot-nginx</code></pre>
+                        </div>
+                        <div class="code-block-wrapper">
+                            <div class="code-header">
+                                <span class="code-lang">bash</span>
+                                <span class="code-title">Obtain SSL Certificate</span>
+                                <button class="copy-btn" data-copy="sudo certbot --nginx -d n8n.yourdomain.com">
+                                    <span class="copy-icon">📋</span>
+                                    <span class="copy-text">Copy</span>
+                                </button>
+                            </div>
+                            <pre class="code-block"><code>sudo certbot --nginx -d n8n.yourdomain.com</code></pre>
+                        </div>
+                        <div class="instruction-card">
+                            <h4>When prompted, choose:</h4>
+                            <div class="instruction-steps">
+                                <div class="instruction-step">
+                                    <span class="instruction-number">→</span>
+                                    <div class="instruction-content">
+                                        <strong>"Redirect HTTP to HTTPS"</strong>
+                                        <p>Ensures all traffic is encrypted</p>
+                                    </div>
+                                </div>
+                                <div class="instruction-step">
+                                    <span class="instruction-number">→</span>
+                                    <div class="instruction-content">
+                                        <strong>"Yes" to auto-renew</strong>
+                                        <p>Certificates auto-renew before expiration</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="success-card">
+                            <div class="success-icon">🎉</div>
+                            <div class="success-content">
+                                <h4>You're Live!</h4>
+                                <p>Open <code>https://n8n.yourdomain.com</code> to see your secure n8n login page.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Step 12 -->
+                    <section class="step-section" id="step-12">
+                        <div class="step-header">
+                            <div class="step-badge">Step 12</div>
+                            <h2>Auto-Start on Server Reboot</h2>
+                            <p>Configure systemd to automatically start n8n on boot</p>
+                        </div>
+                        <div class="alert alert-info">
+                            <span class="alert-icon">ℹ️</span>
+                            <div class="alert-content">
+                                Docker auto-starts containers with <code>restart: unless-stopped</code>, but this systemd service ensures reliability.
+                            </div>
+                        </div>
+                        <div class="code-block-wrapper">
+                            <div class="code-header">
+                                <span class="code-lang">bash</span>
+                                <span class="code-title">Create systemd service</span>
+                                <button class="copy-btn" data-copy="sudo nano /etc/systemd/system/n8n.service">
+                                    <span class="copy-icon">📋</span>
+                                    <span class="copy-text">Copy</span>
+                                </button>
+                            </div>
+                            <pre class="code-block"><code>sudo nano /etc/systemd/system/n8n.service</code></pre>
+                        </div>
+                        <div class="code-block-wrapper">
+                            <div class="code-header">
+                                <span class="code-lang">ini</span>
+                                <span class="code-title">n8n.service</span>
+                                <button class="copy-btn" data-copy="[Unit]
+Description=n8n Automation Service
+Requires=docker.service
+After=docker.service
+
+[Service]
+WorkingDirectory=/home/ubuntu/n8n
+ExecStart=/usr/bin/docker compose up -d
+ExecStop=/usr/bin/docker compose down
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target">
+                                    <span class="copy-icon">📋</span>
+                                    <span class="copy-text">Copy</span>
+                                </button>
+                            </div>
+                            <pre class="code-block"><code><span class="code-section">[Unit]</span>
+<span class="code-key">Description</span>=n8n Automation Service
+<span class="code-key">Requires</span>=docker.service
+<span class="code-key">After</span>=docker.service
+
+<span class="code-section">[Service]</span>
+<span class="code-key">WorkingDirectory</span>=/home/ubuntu/n8n
+<span class="code-key">ExecStart</span>=/usr/bin/docker compose up -d
+<span class="code-key">ExecStop</span>=/usr/bin/docker compose down
+<span class="code-key">RemainAfterExit</span>=yes
+
+<span class="code-section">[Install]</span>
+<span class="code-key">WantedBy</span>=multi-user.target</code></pre>
+                        </div>
+                        <div class="code-block-wrapper">
+                            <div class="code-header">
+                                <span class="code-lang">bash</span>
+                                <span class="code-title">Enable the service</span>
+                                <button class="copy-btn" data-copy="sudo systemctl daemon-reload
+sudo systemctl enable n8n">
+                                    <span class="copy-icon">📋</span>
+                                    <span class="copy-text">Copy</span>
+                                </button>
+                            </div>
+                            <pre class="code-block"><code>sudo systemctl daemon-reload
+sudo systemctl enable n8n</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- Step 13 -->
+                    <section class="step-section" id="step-13">
+                        <div class="step-header">
+                            <div class="step-badge">Step 13</div>
+                            <h2>Updating n8n in the Future</h2>
+                            <p>Keep your n8n installation up to date</p>
+                        </div>
+                        <div class="code-block-wrapper">
+                            <div class="code-header">
+                                <span class="code-lang">bash</span>
+                                <span class="code-title">Update n8n</span>
+                                <button class="copy-btn" data-copy="cd ~/n8n
+docker compose pull
+docker compose up -d">
+                                    <span class="copy-icon">📋</span>
+                                    <span class="copy-text">Copy</span>
+                                </button>
+                            </div>
+                            <pre class="code-block"><code>cd ~/n8n
+docker compose pull
+docker compose up -d</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- Step 14 -->
+                    <section class="step-section" id="step-14">
+                        <div class="step-header">
+                            <div class="step-badge">Step 14</div>
+                            <h2>Backup Strategy (Production)</h2>
+                            <p>Protect your workflows and data with proper backups</p>
+                        </div>
+                        <div class="backup-grid">
+                            <div class="backup-card">
+                                <div class="backup-icon">🐘</div>
+                                <h4>PostgreSQL Backup</h4>
+                                <p>Daily database backup via cron</p>
+                                <div class="code-block-wrapper">
+                                    <div class="code-header">
+                                        <span class="code-lang">bash</span>
+                                        <button class="copy-btn" data-copy='pg_dump -U n8n n8n > /home/ubuntu/db-backup-$(date +%F).sql'>
+                                            <span class="copy-icon">📋</span>
+                                            <span class="copy-text">Copy</span>
+                                        </button>
+                                    </div>
+                                    <pre class="code-block"><code>pg_dump -U n8n n8n > /home/ubuntu/db-backup-$(date +%F).sql</code></pre>
+                                </div>
+                            </div>
+                            <div class="backup-card">
+                                <div class="backup-icon">📁</div>
+                                <h4>n8n Config Backup</h4>
+                                <p>Backup the n8n data directory</p>
+                                <div class="file-path">
+                                    <code>~/n8n/n8n_data/</code>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Step 15 - Capabilities -->
+                    <section class="step-section" id="step-15" id="capabilities">
+                        <div class="step-header">
+                            <div class="step-badge success">Complete</div>
+                            <h2>What You Now Have</h2>
+                            <p>Your production-ready n8n deployment capabilities</p>
+                        </div>
+                        <div class="capabilities-grid">
+                            <div class="capability-card">
+                                <span class="capability-icon">✔</span>
+                                <span>Production-grade n8n server</span>
+                            </div>
+                            <div class="capability-card">
+                                <span class="capability-icon">✔</span>
+                                <span>Secure HTTPS encryption</span>
+                            </div>
+                            <div class="capability-card">
+                                <span class="capability-icon">✔</span>
+                                <span>Unlimited workflows</span>
+                            </div>
+                            <div class="capability-card">
+                                <span class="capability-icon">✔</span>
+                                <span>Unlimited executions</span>
+                            </div>
+                            <div class="capability-card">
+                                <span class="capability-icon">✔</span>
+                                <span>Dedicated PostgreSQL database</span>
+                            </div>
+                            <div class="capability-card">
+                                <span class="capability-icon">✔</span>
+                                <span>High stability & reliability</span>
+                            </div>
+                            <div class="capability-card">
+                                <span class="capability-icon">✔</span>
+                                <span>Safe credential encryption</span>
+                            </div>
+                            <div class="capability-card">
+                                <span class="capability-icon">✔</span>
+                                <span>Webhook-ready architecture</span>
+                            </div>
+                            <div class="capability-card">
+                                <span class="capability-icon">✔</span>
+                                <span>Scalable infrastructure</span>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="logo-icon">⚡</span>
+                    <span>n8n AWS Guide</span>
+                </div>
+                <p class="footer-text">
+                    Production-ready workflow automation deployment guide
+                </p>
+                <div class="footer-links">
+                    <a href="https://n8n.io" target="_blank">n8n Official</a>
+                    <a href="https://docs.n8n.io" target="_blank">n8n Docs</a>
+                    <a href="https://aws.amazon.com" target="_blank">AWS</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" aria-label="Back to top">
+        <span>↑</span>
+    </button>
+
+    <script src="script.js"></script>
+</body>
+</html>
